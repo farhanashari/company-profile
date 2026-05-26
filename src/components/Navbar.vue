@@ -98,7 +98,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-2"
     >
-      <div v-show="isMobileMenuOpen" :class="['md:hidden absolute top-20 left-0 right-0 mx-4 rounded-full shadow-xl border p-4 space-y-1', isLight ? 'bg-white border-gray-200' : 'bg-black/80 backdrop-blur-md border-white/10']">
+      <div v-show="isMobileMenuOpen" :class="['md:hidden absolute top-20 left-0 right-0 mx-4 rounded-[1.5rem] shadow-xl border p-4 space-y-1', isLight ? 'bg-white border-gray-200' : 'bg-black/10 backdrop-blur-md border-white/10']">
         <router-link
           v-for="link in navLinks"
           :key="link.name"
