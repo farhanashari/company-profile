@@ -44,7 +44,7 @@ onMounted(() => {
             <!-- Badge -->
             <div class="inline-flex items-center px-3 py-1.5 bg-white/10 rounded-full mb-6 border border-white/10">
               <span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-              <span class="text-white/80 text-xs font-medium tracking-wide">Solution to a wide variety of projects</span>
+              <span class="text-white/80 text-xs font-medium tracking-wide">Solution to a wide variety of projects test</span>
             </div>
 
             <!-- Headline -->
