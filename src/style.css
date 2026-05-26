@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "SF Pro Display",
+      "SF Pro Text",
+      system-ui,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #1f2937;
+    letter-spacing: -0.01em; /* tracking-tight global */
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+}
+
+/* Page transition animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.4s ease;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
