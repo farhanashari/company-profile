@@ -1,73 +1,125 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import WaIcon from "@/components/icons/WaIcon.vue";
 
+// ─── Types ───────────────────────────────────────────────
+interface WaContact {
+  id: string;
+  label: string;
+  sublabel: string;
+  emoji: string;
+  phone: string;
+  message: string;
+  gradient: string;
+}
+
+// ─── Router ──────────────────────────────────────────────
 const route = useRoute();
 const router = useRouter();
+
+// ─── State ───────────────────────────────────────────────
 const isMobileMenuOpen = ref(false);
+const isWaModalOpen = ref(false);
 const scrollY = ref(0);
+
+// ─── Computed ────────────────────────────────────────────
 const isHomePage = computed(() => route.path === "/");
-
 const scrollProgress = computed(() => (isHomePage.value ? Math.min(scrollY.value / 80, 1) : 1));
-
 const isLight = computed(() => scrollProgress.value > 0.5 || !isHomePage.value);
 
 const navStyle = computed(() => {
   const p = scrollProgress.value;
+  // Before scroll: white-tinted glass (iOS-style)
+  // After scroll: white solid-ish
   const r = Math.round(255 * p);
-  const bgAlpha = (0.1 + p * 0.8).toFixed(2);
-  const borderAlpha = (p * 0.15).toFixed(2);
+  const g = Math.round(255 * p);
+  const b = Math.round(255 * p);
+  const bgAlpha =
+    p < 0.5
+      ? (0.12 + p * 0.3).toFixed(2) // glass phase: white glass
+      : (0.75 + p * 0.2).toFixed(2); // solid phase: near white
+  const borderAlpha =
+    p < 0.5
+      ? (0.25 - p * 0.1).toFixed(2) // bright border saat glass
+      : (p * 0.12).toFixed(2);
   const shadowAlpha = (p * 0.1).toFixed(2);
   const shadowBlur = Math.round(p * 24);
   const shadowY = Math.round(p * 8);
+
   return {
-    background: `rgba(${r}, ${r}, ${r}, ${bgAlpha})`,
-    borderColor: `rgba(209, 213, 219, ${borderAlpha})`,
+    background: p < 0.5 ? `rgba(255, 255, 255, ${bgAlpha})` : `rgba(${r}, ${g}, ${b}, ${bgAlpha})`,
+    borderColor: `rgba(255, 255, 255, ${borderAlpha})`,
     boxShadow: `0 ${shadowY}px ${shadowBlur}px rgba(0, 0, 0, ${shadowAlpha})`,
   };
 });
 
+// ─── Data ────────────────────────────────────────────────
 const navLinks = [
   { name: "dashboard", label: "Dashboard", path: "/" },
   { name: "products", label: "Products", path: "/products" },
   { name: "contact", label: "Contact Us", path: "/contact" },
 ];
 
+const waContacts: WaContact[] = [
+  {
+    id: "retail",
+    label: "Retail",
+    sublabel: "Pembelian satuan & eceran",
+    emoji: "🛍️",
+    phone: "6281212874021",
+    message: "Halo%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20retail",
+    gradient: "from-green-400 to-emerald-500",
+  },
+  {
+    id: "proyek",
+    label: "Proyek",
+    sublabel: "Kontraktor & pengadaan proyek",
+    emoji: "🏗️",
+    phone: "6281212874021",
+    message: "Halo%2C%20saya%20ingin%20bertanya%20mengenai%20proyek%20kontraktor",
+    gradient: "from-blue-400 to-blue-600",
+  },
+];
+
+// ─── Helpers ─────────────────────────────────────────────
 const isActive = (path: string) => route.path === path;
 
 const scrollToSection = async (sectionId: string) => {
   if (route.path !== "/") {
     await router.push("/");
     setTimeout(() => {
-      const element = document.getElementById(sectionId);
-      if (element) element.scrollIntoView({ behavior: "smooth" });
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
     }, 300);
   } else {
-    const element = document.getElementById(sectionId);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   }
   isMobileMenuOpen.value = false;
+};
+
+const openWa = (contact: WaContact) => {
+  window.open(`https://wa.me/${contact.phone}?text=${contact.message}`, "_blank", "noopener,noreferrer");
+  isWaModalOpen.value = false;
 };
 
 const handleScroll = () => {
   scrollY.value = window.scrollY;
 };
-
 onMounted(() => window.addEventListener("scroll", handleScroll));
 onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 </script>
 
 <template>
   <div class="fixed top-8 left-0 right-0 z-50 flex justify-center px-4">
-    <!-- Navbar -->
-    <nav :style="navStyle" :class="['border backdrop-blur-md rounded-full px-5 py-3 flex items-center justify-between gap-6 w-full max-w-3xl']">
+    <!-- ── Navbar ─────────────────────────────── -->
+    <nav :style="navStyle" class="border backdrop-blur-md rounded-full px-5 py-3 flex items-center justify-between gap-6 w-full max-w-3xl transition-all duration-300">
       <!-- Logo -->
       <router-link to="/" class="flex items-center space-x-2 flex-shrink-0">
         <img src="@/assets/logo.png" alt="Logo" :class="['w-7 h-7 object-contain transition-all duration-300', isLight ? 'brightness-100' : 'brightness-0 invert']" />
         <span :class="['text-sm font-bold tracking-tight transition-colors duration-300', isLight ? 'text-gray-900' : 'text-white']"> Ducting FirstDuct </span>
       </router-link>
 
-      <!-- Desktop Nav -->
+      <!-- Desktop Links -->
       <div class="hidden md:flex items-center gap-1">
         <router-link
           v-for="link in navLinks"
@@ -84,27 +136,17 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
       <!-- CTA + Hamburger -->
       <div class="flex items-center gap-2">
-        <!-- Desktop WhatsApp CTA -->
-
-        <a
-          href="https://wa.me/6281212874021?text=Halo%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20Anda"
-          target="_blank"
-          rel="noopener noreferrer"
+        <!-- Desktop WA CTA -->
+        <button
+          @click="isWaModalOpen = true"
           :class="[
             'hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium rounded-full transition-all duration-200',
             isLight ? 'bg-black/5 hover:bg-black/10 text-gray-800' : 'bg-white/15 hover:bg-white/25 text-white',
           ]"
         >
-          <svg class="w-3.5 h-3.5 flex-shrink-0 text-green-500" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"
-            />
-            <path
-              d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.855L.057 23.882l6.233-1.635A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.368l-.36-.214-3.7.97.988-3.61-.235-.371A9.818 9.818 0 1112 21.818z"
-            />
-          </svg>
+          <WaIcon class="w-3.5 h-3.5 flex-shrink-0 text-green-500" />
           Chat via WhatsApp
-        </a>
+        </button>
 
         <!-- Mobile Hamburger -->
         <button @click="isMobileMenuOpen = !isMobileMenuOpen" :class="['md:hidden p-1.5 rounded-lg transition-colors', isLight ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-white/10']">
@@ -118,7 +160,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
       </div>
     </nav>
 
-    <!-- Mobile Menu -->
+    <!-- ── Mobile Menu ────────────────────────── -->
     <transition
       enter-active-class="transition ease-out duration-300"
       enter-from-class="opacity-0 -translate-y-3 scale-95"
@@ -136,12 +178,12 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
             0 1px 0 rgba(255, 255, 255, 0.8) inset;
         "
       >
-        <!-- iOS drag indicator -->
+        <!-- Drag pill -->
         <div class="flex justify-center pt-2.5 pb-1">
           <div :class="['w-9 h-1 rounded-full', isLight ? 'bg-gray-300/80' : 'bg-white/30']" />
         </div>
 
-        <!-- Nav Links -->
+        <!-- Links -->
         <div class="px-2 py-1">
           <router-link
             v-for="(link, index) in navLinks"
@@ -162,30 +204,109 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
         </div>
 
         <!-- Bottom Actions -->
-        <div class="px-3 pb-3 pt-2 space-y-2">
-          <!-- WhatsApp -->
-
-          <a
-            href="https://wa.me/6281212874021?text=Halo%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20Anda"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div class="px-3 pb-3 pt-2">
+          <button
+            @click="
+              isWaModalOpen = true;
+              isMobileMenuOpen = false;
+            "
             :class="[
               'flex items-center justify-center gap-2 w-full px-4 py-3 text-[15px] font-semibold rounded-2xl transition-all duration-150 active:scale-[0.98]',
               isLight ? 'bg-gray-100/80 hover:bg-gray-200/80 text-gray-800' : 'bg-white/15 hover:bg-white/25 text-white',
             ]"
           >
-            <svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"
-              />
-              <path
-                d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.855L.057 23.882l6.233-1.635A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.368l-.36-.214-3.7.97.988-3.61-.235-.371A9.818 9.818 0 1112 21.818z"
-              />
-            </svg>
+            <WaIcon class="w-4 h-4 text-green-500" />
             Chat via WhatsApp
-          </a>
+          </button>
         </div>
       </div>
     </transition>
   </div>
+
+  <!-- ── WA Floating Badge (Mobile only) ───────── -->
+  <div class="fixed bottom-8 right-5 z-40 md:hidden flex items-center gap-3">
+    <!-- Label tooltip -->
+    <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 translate-x-2" enter-to-class="opacity-100 translate-x-0">
+      <span v-show="!isWaModalOpen" class="bg-black/70 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg pointer-events-none"> Chat dengan kami </span>
+    </transition>
+
+    <!-- Badge Button -->
+    <button
+      @click="isWaModalOpen = true"
+      class="relative w-14 h-14 rounded-full bg-[#25D366] shadow-[0_4px_20px_rgba(37,211,102,0.5)] flex items-center justify-center animate-wa-pulse active:scale-95 transition-transform duration-150"
+      aria-label="Hubungi via WhatsApp"
+    >
+      <!-- Red dot badge -->
+      <!-- <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-bold text-white leading-none">
+        {{ waContacts.length }}
+      </span> -->
+      <WaIcon class="w-7 h-7 text-white" />
+    </button>
+  </div>
+
+  <!-- ── WA Modal (Centered dialog desktop) ──────── -->
+  <teleport to="body">
+    <transition enter-active-class="transition ease-out duration-300" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="transition ease-in duration-200" leave-from-class="opacity-100" leave-to-class="opacity-0">
+      <div v-if="isWaModalOpen" class="fixed inset-0 z-[999] flex items-end md:items-center justify-center md:pb-0 pb-6 px-4" style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px)" @click.self="isWaModalOpen = false">
+        <transition
+          enter-active-class="transition ease-out duration-300"
+          enter-from-class="opacity-0 translate-y-8 md:translate-y-0 md:scale-95"
+          enter-to-class="opacity-100 translate-y-0 md:scale-100"
+          leave-active-class="transition ease-in duration-200"
+          leave-from-class="opacity-100 translate-y-0 md:scale-100"
+          leave-to-class="opacity-0 translate-y-8 md:translate-y-0 md:scale-95"
+          appear
+        >
+          <div class="w-full max-w-sm bg-white/95 backdrop-blur-3xl md:rounded-3xl rounded-3xl overflow-hidden shadow-2xl">
+            <!-- Drag pill — mobile only -->
+            <div class="flex justify-center pt-3 pb-2 md:hidden">
+              <div class="w-9 h-1 bg-black/20 rounded-full" />
+            </div>
+
+            <!-- Header — desktop only -->
+            <div class="hidden md:flex items-center justify-between px-5 pt-5 pb-4 border-b border-black/[0.06]">
+              <div>
+                <p class="text-[15px] font-semibold text-gray-900">Hubungi via WhatsApp</p>
+              </div>
+              <button @click="isWaModalOpen = false" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Title — mobile only -->
+            <p class="md:hidden text-center text-xs font-medium text-gray-400 pb-3 border-b border-black/[0.08] mx-4">Hubungi via WhatsApp</p>
+
+            <!-- Contacts -->
+            <button
+              v-for="(contact, i) in waContacts"
+              :key="contact.id"
+              @click="openWa(contact)"
+              :class="['flex items-center gap-3 w-full px-4 py-3.5 text-left transition-colors duration-150 hover:bg-black/[0.03] active:bg-black/5', i < waContacts.length - 1 ? 'border-b border-black/[0.06]' : '']"
+            >
+              <div :class="['w-11 h-11 rounded-full bg-gradient-to-br flex items-center justify-center text-xl flex-shrink-0 shadow-sm', contact.gradient]">
+                {{ contact.emoji }}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[15px] font-semibold text-gray-900">{{ contact.label }}</p>
+                <p class="text-xs text-gray-400 mt-0.5 truncate">{{ contact.sublabel }}</p>
+              </div>
+              <WaIcon class="w-6 h-6 text-[#25D366] flex-shrink-0" />
+            </button>
+
+            <!-- Cancel — mobile only -->
+            <div class="md:hidden px-3 pb-3 pt-2">
+              <button @click="isWaModalOpen = false" class="w-full py-3.5 rounded-2xl bg-gray-100 text-[15px] font-semibold text-blue-600 transition-colors duration-150 active:bg-gray-200">Batal</button>
+            </div>
+
+            <!-- Footer — desktop only -->
+            <div class="hidden md:block px-4 py-3 bg-gray-50/80 border-t border-black/[0.04]">
+              <p class="text-[11px] text-gray-400 text-center">Tim kami biasanya membalas dalam beberapa menit</p>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </transition>
+  </teleport>
 </template>
