@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Swal from "sweetalert2";
 import WaIcon from "@/components/icons/WaIcon.vue";
 
 // ─── Types ───────────────────────────────────────────────
@@ -22,6 +23,7 @@ const router = useRouter();
 const isMobileMenuOpen = ref(false);
 const isWaModalOpen = ref(false);
 const scrollY = ref(0);
+const isDownloadLoading = ref(false);
 
 // ─── Computed ────────────────────────────────────────────
 const isHomePage = computed(() => route.path === "/");
@@ -68,7 +70,7 @@ const waContacts: WaContact[] = [
     sublabel: "Consultation & purchase ",
     emoji: "🛍️",
     phone: "6285312084879",
-    message: "Halo,%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20FisrtDuct",
+    message: "Halo,%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20FirstDuct",
     gradient: "from-green-400 to-emerald-500",
   },
 ];
@@ -76,17 +78,63 @@ const waContacts: WaContact[] = [
 // ─── Helpers ─────────────────────────────────────────────
 const isActive = (path: string) => route.path === path;
 
-const scrollToSection = async (sectionId: string) => {
-  if (route.path !== "/") {
-    await router.push("/");
-    setTimeout(() => {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-    }, 300);
-  } else {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+const downloadBrochure = async () => {
+  try {
+    isDownloadLoading.value = true;
+    // Ganti path ini dengan path brochure PDF Anda yang sesungguhnya
+    const pdfPath = "@/assets/FirstDuct-Catalog.pdf";
+
+    // Create link element
+    const link = document.createElement("a");
+    link.href = pdfPath;
+    link.download = "FirstDuct-Brochure.pdf"; // Nama file saat di-download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // SweetAlert2 Success notification
+    await Swal.fire({
+      icon: "success",
+      title: "Congratulations! 🎉",
+      text: "FirstDuct brochure has been downloaded.",
+      confirmButtonText: "Oke",
+      confirmButtonColor: "#3b82f6",
+      timer: 3500,
+      showConfirmButton: true,
+      backdrop: "rgba(0, 0, 0, 0.3)",
+      allowOutsideClick: true,
+      allowEscapeKey: true,
+    });
+  } catch (error) {
+    console.error("Error downloading brochure:", error);
+
+    // SweetAlert2 Error notification
+    await Swal.fire({
+      icon: "error",
+      title: "Failed! ❌",
+      text: "An error occurred while downloading the brochure. Please try again..",
+      confirmButtonText: "Try again",
+      confirmButtonColor: "#ef4444",
+      backdrop: "rgba(0, 0, 0, 0.3)",
+      allowOutsideClick: true,
+      allowEscapeKey: true,
+    });
+  } finally {
+    isDownloadLoading.value = false;
   }
-  isMobileMenuOpen.value = false;
 };
+
+// const scrollToSection = async (sectionId: string) => {
+//   if (route.path !== "/") {
+//     await router.push("/");
+//     setTimeout(() => {
+//       document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+//     }, 300);
+//   } else {
+//     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+//   }
+//   isMobileMenuOpen.value = false;
+// };
 
 const openWa = (contact: WaContact) => {
   window.open(`https://wa.me/${contact.phone}?text=${contact.message}`, "_blank", "noopener,noreferrer");
@@ -101,9 +149,9 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 </script>
 
 <template>
-  <div class="fixed top-8 left-0 right-0 z-50 flex justify-center px-4">
+  <div class="fixed top-8 left-0 right-0 z-50 flex justify-center px-3">
     <!-- ── Navbar ─────────────────────────────── -->
-    <nav :style="navStyle" class="border backdrop-blur-md rounded-full px-5 py-3 flex items-center justify-between gap-6 w-full max-w-3xl transition-all duration-300">
+    <nav :style="navStyle" class="border backdrop-blur-md rounded-full px-5 py-3 flex items-center justify-between gap-6 w-full max-w-4xl transition-all duration-300">
       <!-- Logo -->
       <router-link to="/" class="flex items-center space-x-2 flex-shrink-0">
         <img src="@/assets/logo.png" alt="Logo" :class="['w-7 h-7 object-contain transition-all duration-300', isLight ? 'brightness-100' : 'brightness-0 invert']" />
@@ -137,6 +185,26 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
         >
           <WaIcon class="w-3.5 h-3.5 flex-shrink-0 text-green-500" />
           Chat via WhatsApp
+        </button>
+
+        <!-- Desktop Download PDF Button -->
+        <button
+          @click="downloadBrochure"
+          :disabled="isDownloadLoading"
+          :class="[
+            'hidden md:inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap',
+            isLight ? 'bg-black/5 hover:bg-black/10 text-gray-800 disabled:opacity-50' : 'bg-white/15 hover:bg-white/25 text-white disabled:opacity-50',
+          ]"
+          title="Download Brochure PDF"
+        >
+          <svg v-if="!isDownloadLoading" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v16m8-8l-8 8-8-8M4 20h16" />
+          </svg>
+          <svg v-else class="w-3.5 h-3.5 flex-shrink-0 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+          Download Brochure
         </button>
 
         <!-- Mobile Hamburger -->
@@ -208,6 +276,27 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
           >
             <WaIcon class="w-4 h-4 text-green-500" />
             Chat via WhatsApp
+          </button>
+
+          <button
+            @click="
+              downloadBrochure();
+              isMobileMenuOpen = false;
+            "
+            :disabled="isDownloadLoading"
+            :class="[
+              'flex items-center justify-center gap-2 w-full px-4 py-3 text-[15px] font-semibold rounded-2xl transition-all duration-150 active:scale-[0.98] disabled:opacity-50',
+              isLight ? 'bg-blue-100/80 hover:bg-blue-200/80 text-blue-800' : 'bg-blue-500/15 hover:bg-blue-500/25 text-blue-300',
+            ]"
+          >
+            <svg v-if="!isDownloadLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v16m8-8l-8 8-8-8M4 20h16" />
+            </svg>
+            <svg v-else class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            Download Brochure
           </button>
         </div>
       </div>

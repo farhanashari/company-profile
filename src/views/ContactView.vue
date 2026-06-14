@@ -70,7 +70,7 @@ const handleSubmit = async () => {
 };
 
 const waNumber = "6285312084879";
-const waMessage = encodeURIComponent("Halo, saya ingin bertanya mengenai produk FisrtDuct");
+const waMessage = encodeURIComponent("Halo, saya ingin bertanya mengenai produk FirstDuct");
 
 const contactInfo = [
   {
@@ -290,11 +290,11 @@ const contactInfo = [
               <div class="space-y-3">
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-600">Monday - Friday</span>
-                  <span class="font-medium text-gray-900">9:00 AM - 6:00 PM</span>
+                  <span class="font-medium text-gray-900">8:00 AM - 5:00 PM</span>
                 </div>
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-600">Saturday</span>
-                  <span class="font-medium text-gray-900">10:00 AM - 4:00 PM</span>
+                  <span class="font-medium text-gray-900">8:00 AM - 12:00 PM</span>
                 </div>
                 <div class="flex justify-between text-sm">
                   <span class="text-gray-600">Sunday</span>
