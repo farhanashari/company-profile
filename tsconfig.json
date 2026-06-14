@@ -21,6 +21,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/component/CircularGallery/RollingGallery.vue"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/component/ClientCarousell/RollingGallery.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

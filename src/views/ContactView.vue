@@ -69,8 +69,8 @@ const handleSubmit = async () => {
   }, 5000);
 };
 
-const waNumber = "6281212874021";
-const waMessage = encodeURIComponent("Halo, saya ingin bertanya mengenai produk Anda");
+const waNumber = "6285312084879";
+const waMessage = encodeURIComponent("Halo, saya ingin bertanya mengenai produk FisrtDuct");
 
 const contactInfo = [
   {

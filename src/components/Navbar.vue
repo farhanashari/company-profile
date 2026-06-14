@@ -64,21 +64,12 @@ const navLinks = [
 const waContacts: WaContact[] = [
   {
     id: "retail",
-    label: "Retail",
-    sublabel: "Pembelian satuan & eceran",
+    label: "Mulyanto",
+    sublabel: "Consultation & purchase ",
     emoji: "🛍️",
-    phone: "6281212874021",
-    message: "Halo%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20retail",
+    phone: "6285312084879",
+    message: "Halo,%2C%20saya%20ingin%20bertanya%20mengenai%20produk%20FisrtDuct",
     gradient: "from-green-400 to-emerald-500",
-  },
-  {
-    id: "proyek",
-    label: "Proyek",
-    sublabel: "Kontraktor & pengadaan proyek",
-    emoji: "🏗️",
-    phone: "6281212874021",
-    message: "Halo%2C%20saya%20ingin%20bertanya%20mengenai%20proyek%20kontraktor",
-    gradient: "from-blue-400 to-blue-600",
   },
 ];
 
@@ -266,7 +257,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
             <!-- Header — desktop only -->
             <div class="hidden md:flex items-center justify-between px-5 pt-5 pb-4 border-b border-black/[0.06]">
               <div>
-                <p class="text-[15px] font-semibold text-gray-900">Hubungi via WhatsApp</p>
+                <p class="text-[15px] font-semibold text-gray-900">Contact via WhatsApp</p>
               </div>
               <button @click="isWaModalOpen = false" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -276,7 +267,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
             </div>
 
             <!-- Title — mobile only -->
-            <p class="md:hidden text-center text-xs font-medium text-gray-400 pb-3 border-b border-black/[0.08] mx-4">Hubungi via WhatsApp</p>
+            <p class="md:hidden text-center text-xs font-medium text-gray-400 pb-3 border-b border-black/[0.08] mx-4">Contact via WhatsApp</p>
 
             <!-- Contacts -->
             <button
@@ -302,7 +293,7 @@ onUnmounted(() => window.removeEventListener("scroll", handleScroll));
 
             <!-- Footer — desktop only -->
             <div class="hidden md:block px-4 py-3 bg-gray-50/80 border-t border-black/[0.04]">
-              <p class="text-[11px] text-gray-400 text-center">Tim kami biasanya membalas dalam beberapa menit</p>
+              <p class="text-[11px] text-gray-400 text-center">Our team usually responds within a few minutes</p>
             </div>
           </div>
         </transition>

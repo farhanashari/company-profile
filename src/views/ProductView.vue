@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import product1 from "@/assets/product1.jpg";
+import product2 from "@/assets/product2.jpg";
 
 interface Product {
   id: number;
@@ -14,21 +16,31 @@ interface Product {
 const products = ref<Product[]>([
   {
     id: 1,
-    name: "Enterprise Web Platform",
-    category: "Web Development",
-    description: "A scalable, secure web platform built for enterprise-level businesses. Features include multi-tenant architecture, real-time analytics, and seamless third-party integrations.",
-    image: "https://placehold.co/600x400/2563eb/ffffff?text=Enterprise+Platform",
-    features: ["Multi-tenant Architecture", "Real-time Analytics", "API Integration", "SSO Support"],
+    name: "Ducting Panel",
+    category: "Ducting Panel",
+    description: "Premium PIR pre-insulated ducts with superior insulation, lightweight design, fire retardancy, and high durability. An improvement over PUR with better R-value performance.",
+    image: product1,
+    features: [
+      "Excellent Insulation Properties",
+      "Reduce construction time and cost",
+      "Longer life span 20 years",
+      "Energy saving",
+      "Create thermal comfort",
+      "Spread of flame index 0",
+      "Eco-friendly product (CFC-Free)",
+      "Lightweight material with built-in PIR Core",
+    ],
     price: "Custom",
   },
   {
     id: 2,
-    name: "Mobile App Suite",
-    category: "Mobile Development",
-    description: "Cross-platform mobile applications that deliver native-like performance. Built with React Native and Flutter for iOS and Android platforms.",
-    image: "https://placehold.co/600x400/7c3aed/ffffff?text=Mobile+App+Suite",
-    features: ["iOS & Android", "Offline Mode", "Push Notifications", "Biometric Auth"],
-    price: "From $25k",
+    name: "Accessories & Installation",
+    category: "Accessories & Installation",
+    description:
+      "Complete 8-step installation with cutting, bending, assembling, sealing, reinforcing, and finishing. All supported by quality accessories including PVC connectors, aluminium profiles, sealants, and professional tools for a durable, airtight ducting system.",
+    image: product2,
+    features: ["Cutting", "Bending", "Assembling", "Sealing", "Connecting", "Reinforcing", "Covering", "Finishing"],
+    price: "Custom",
   },
 ]);
 
@@ -64,7 +76,9 @@ const closeProductModal = () => {
     <section class="bg-gradient-to-br from-primary-900 to-primary-800 pt-36 pb-20 lg:pt-44 lg:pb-28 -mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">Our Products & Services</h1>
-        <p class="text-lg sm:text-xl text-primary-100 max-w-3xl mx-auto leading-relaxed">Discover our comprehensive range of digital solutions designed to help your business thrive in the modern digital landscape.</p>
+        <p class="text-lg sm:text-xl text-primary-100 max-w-3xl mx-auto leading-relaxed">
+          Our product is suitable solution to a wide variety of projects. First Duct pre-insulated aluminium panels make for an excellent fit in all types of development project.
+        </p>
       </div>
     </section>
 
@@ -87,7 +101,7 @@ const closeProductModal = () => {
     <!-- Products Grid -->
     <section class="py-16 bg-gray-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <transition-group name="product-grid" tag="div" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <transition-group name="product-grid" tag="div" class="grid sm:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8 lg:max-w-4xl lg:mx-auto">
           <div v-for="product in filteredProducts" :key="product.id" class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
             <!-- Image -->
             <div class="relative overflow-hidden aspect-[3/2]">
@@ -192,7 +206,7 @@ const closeProductModal = () => {
               </p>
 
               <div class="mb-8">
-                <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Key Features</h4>
+                <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Advantages</h4>
                 <div class="grid sm:grid-cols-2 gap-3">
                   <div v-for="feature in selectedProduct.features" :key="feature" class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
                     <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">

@@ -42,7 +42,7 @@ const scrollToSection = async (sectionId: string) => {
             </div>
             <span class="text-xl font-bold text-white">Ducting FirstDuct</span>
           </div>
-          <p class="text-gray-400 text-sm leading-relaxed mb-6">Transforming businesses through innovative digital solutions. We bring your vision to life.</p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6">With our expertise and a built-up factory area of 12,000 sq meter, we are able to offer you our quality products and quality services for your needs in the HVAC industry.</p>
           <div class="flex space-x-4">
             <a href="#" class="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary-600 transition-colors" aria-label="Twitter">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

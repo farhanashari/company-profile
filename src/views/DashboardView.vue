@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import DotGrid from "@/component/DotGrid/DotGrid.vue";
 import CountUp from "@/component/CountUp/CountUp.vue";
-import CircularGallery from "@/component/CircularGallery/CircularGallery.vue";
+import ClientCarousell from "@/component/ClientCarousell/ClientCarousell.vue";
 
 import client1 from "@/assets/client1.jpg";
 import client2 from "@/assets/client2.jpg";
@@ -150,9 +150,7 @@ onMounted(() => {
           <p class="text-sm text-gray-400 max-w-xl mx-auto tracking-tight">We've partnered with businesses of all sizes to deliver exceptional digital experiences.</p>
         </div>
       </div>
-      <div class="h-[500px]">
-        <CircularGallery :items="clients.map((c) => ({ image: c.logo, text: c.name }))" :bend="3" text-color="#ffffff" :border-radius="0.05" font="bold 24px Arial" :scroll-speed="2" :scroll-ease="0.05" />
-      </div>
+      <ClientCarousell :clients="clients" :auto-scroll-interval="2000" />
     </section>
 
     <!-- CTA Section -->
