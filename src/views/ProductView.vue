@@ -30,58 +30,22 @@ const products = ref<Product[]>([
     features: ["iOS & Android", "Offline Mode", "Push Notifications", "Biometric Auth"],
     price: "From $25k",
   },
-  {
-    id: 3,
-    name: "Cloud Infrastructure",
-    category: "DevOps",
-    description: "End-to-end cloud infrastructure setup and management on AWS, Azure, or GCP. Includes CI/CD pipelines, monitoring, and auto-scaling configurations.",
-    image: "https://placehold.co/600x400/059669/ffffff?text=Cloud+Infrastructure",
-    features: ["Auto-scaling", "CI/CD Pipelines", "24/7 Monitoring", "Disaster Recovery"],
-    price: "Custom",
-  },
-  {
-    id: 4,
-    name: "AI-Powered Analytics",
-    category: "Data Science",
-    description: "Harness the power of artificial intelligence to gain actionable insights from your data. Custom ML models tailored to your business needs.",
-    image: "https://placehold.co/600x400/d97706/ffffff?text=AI+Analytics",
-    features: ["Predictive Models", "Data Visualization", "Automated Reports", "NLP Processing"],
-    price: "From $15k",
-  },
-  {
-    id: 5,
-    name: "UI/UX Design System",
-    category: "Design",
-    description: "Comprehensive design systems that ensure consistency across all your digital products. Includes component libraries, style guides, and prototyping.",
-    image: "https://placehold.co/600x400/db2777/ffffff?text=Design+System",
-    features: ["Component Library", "Style Guide", "Interactive Prototypes", "User Testing"],
-    price: "From $10k",
-  },
-  {
-    id: 6,
-    name: "Cybersecurity Suite",
-    category: "Security",
-    description: "Protect your digital assets with our comprehensive security solutions. Includes penetration testing, vulnerability assessments, and security audits.",
-    image: "https://placehold.co/600x400/dc2626/ffffff?text=Cybersecurity",
-    features: ["Penetration Testing", "Vulnerability Scan", "Security Audit", "Compliance"],
-    price: "Custom",
-  },
 ]);
 
-const categories = ref<string[]>(["All", "Web Development", "Mobile Development", "DevOps", "Data Science", "Design", "Security"]);
+// const categories = ref<string[]>(["All", "Web Development", "Mobile Development", "DevOps", "Data Science", "Design", "Security"]);
 
-const activeCategory = ref("All");
+// const activeCategory = ref("All");
 
 const filteredProducts = ref<Product[]>(products.value);
 
-const filterProducts = (category: string) => {
-  activeCategory.value = category;
-  if (category === "All") {
-    filteredProducts.value = products.value;
-  } else {
-    filteredProducts.value = products.value.filter((p) => p.category === category);
-  }
-};
+// const filterProducts = (category: string) => {
+//   activeCategory.value = category;
+//   if (category === "All") {
+//     filteredProducts.value = products.value;
+//   } else {
+//     filteredProducts.value = products.value.filter((p) => p.category === category);
+//   }
+// };
 
 const selectedProduct = ref<Product | null>(null);
 
@@ -105,7 +69,7 @@ const closeProductModal = () => {
     </section>
 
     <!-- Filter Bar -->
-    <section class="sticky top-16 z-30 bg-white border-b border-gray-200 shadow-sm">
+    <!-- <section class="sticky top-16 z-30 bg-white border-b border-gray-200 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide">
           <button
@@ -118,7 +82,7 @@ const closeProductModal = () => {
           </button>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Products Grid -->
     <section class="py-16 bg-gray-50">
